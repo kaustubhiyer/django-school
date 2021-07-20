@@ -7,6 +7,7 @@ class StudentSerializer(serializers.ModelSerializer):
     fields = '__all__'
 
 class TeacherSerializer(serializers.ModelSerializer):
+  classroom = serializers.StringRelatedField(many=True)
   class Meta:
     model = Teacher
     fields = '__all__'
