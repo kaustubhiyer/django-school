@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.generics import (
-    CreateAPIView,
+    ListCreateAPIView,
     ListAPIView,
+    CreateAPIView,
     DestroyAPIView,
     RetrieveAPIView,
 )
@@ -11,21 +12,10 @@ from .models import Teacher, Student, Course
 
 # Create your views here.
 
-#######################################################################
-### Student Views
-#######################################################################
-class CreateCourseAPIView(CreateAPIView):
+
+class ListCreateCourseAPIView(ListCreateAPIView):
     """
     This endpoint can be accessed to create a new course in the DB
-    """
-
-    queryset = Course.objects.all()
-    serializer_class = CourseSerializer
-
-
-class ListActiveCoursesAPIView(ListAPIView):
-    """
-    This endpoint returns a list of active courses
     """
 
     serializer_class = CourseSerializer
@@ -69,3 +59,13 @@ class GetTeacherAPIView(RetrieveAPIView):
 
     serializer_class = TeacherSerializer
     queryset = Teacher.objects.all()
+
+
+class CreateTeacherAPIView(CreateAPIView):
+    serializer_class = TeacherSerializer
+    queryset = Teacher.objects.all()
+
+
+class CreateStudentAPIView(CreateAPIView):
+    serializer_class = StudentSerializer
+    queryset = Student.objects.all()
