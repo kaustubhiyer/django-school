@@ -1,14 +1,16 @@
 from rest_framework import serializers
 from .models import Student, Teacher
 
+
 class StudentSerializer(serializers.ModelSerializer):
-  class Meta:
-    model = Student
-    fields = '__all__'
+    class Meta:
+        model = Student
+        fields = "__all__"
+
 
 class TeacherSerializer(serializers.ModelSerializer):
-  classroom = serializers.StringRelatedField(many=True)
-  class Meta:
-    model = Teacher
-    fields = '__all__'
+    classroom = serializers.StringRelatedField(many=True)
 
+    class Meta:
+        model = Teacher
+        fields = "__all__"
