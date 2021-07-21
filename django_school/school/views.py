@@ -1,70 +1,71 @@
 from django.shortcuts import render
-from rest_framework.generics import ListAPIView
-from rest_framework.generics import CreateAPIView
-from rest_framework.generics import DestroyAPIView
-from rest_framework.generics import UpdateAPIView
-from .serializers import StudentSerializer, TeacherSerializer
-from .models import Teacher, Student
+from rest_framework.views import APIView
+from rest_framework.generics import (
+    CreateAPIView,
+    ListAPIView,
+    DestroyAPIView,
+    RetrieveAPIView,
+)
+from .serializers import StudentSerializer, TeacherSerializer, CourseSerializer
+from .models import Teacher, Student, Course
 
 # Create your views here.
 
 #######################################################################
 ### Student Views
 #######################################################################
-class CreateStudentAPIView(CreateAPIView):
-    """This endpoint can be accessed to create a new student in the DB"""
+class CreateCourseAPIView(CreateAPIView):
+    """
+    This endpoint can be accessed to create a new course in the DB
+    """
 
-    queryset = Student.objects.all()
-    serializer_class = StudentSerializer
-
-
-class ListStudentAPIView(ListAPIView):
-    """This endpoint can be accessed to list the students in the DB"""
-
-    queryset = Student.objects.all()
-    serializer_class = StudentSerializer
+    queryset = Course.objects.all()
+    serializer_class = CourseSerializer
 
 
-class UpdateStudentAPIView(UpdateAPIView):
-    """This endpoint can be accessed to update a student's information in the DB"""
+class ListActiveCoursesAPIView(ListAPIView):
+    """
+    This endpoint returns a list of active courses
+    """
 
-    queryset = Student.objects.all()
-    serializer_class = StudentSerializer
+    serializer_class = CourseSerializer
+
+    def get_queryset(self):
+        """
+        The queryset is only active courses
+        """
+        return Course.objects.filter(is_active=True)
 
 
-class DeleteStudentAPIView(DestroyAPIView):
-    """This endpoint can be accessed to delete a student from the DB"""
+class DeleteCourseAPIView(DestroyAPIView):
+    """
+    To delete a course (deactivate it)
+    """
 
-    queryset = Student.objects.all()
-    serializer_class = StudentSerializer
+    queryset = Course.objects.all()
+    serializer_class = CourseSerializer
+
+    def perform_destroy(self, instance):
+        instance.is_active = False
+        instance.save()
 
 
-#######################################################################
-### Teacher Views
-#######################################################################
-class CreateTeacherAPIView(CreateAPIView):
-    """This endpoint can be accessed to create a new teacher in the DB"""
+class GetActiveStudentCourses(ListAPIView):
+    """
+    Retrieves all active courses of a student
+    """
 
+    serializer_class = CourseSerializer
+
+    def get_queryset(self):
+        student_id = self.kwargs["pk"]
+        return Course.objects.filter(students__id=student_id)
+
+
+class GetTeacherAPIView(RetrieveAPIView):
+    """
+    Retreives a single teacher's information
+    """
+
+    serializer_class = TeacherSerializer
     queryset = Teacher.objects.all()
-    serializer_class = TeacherSerializer
-
-
-class ListTeacherAPIView(ListAPIView):
-    """This endpoint can be accessed to list the teachers in the DB"""
-
-    queryset = Teacher.objects.all()
-    serializer_class = TeacherSerializer
-
-
-class UpdateTeacherAPIView(UpdateAPIView):
-    """This endpoint can be accessed to update a teacher's information in the DB"""
-
-    queryset = Student.objects.all()
-    serializer_class = TeacherSerializer
-
-
-class DeleteTeacherAPIView(DestroyAPIView):
-    """This endpoint can be accessed to delete a teacher from the DB"""
-
-    queryset = Teacher.objects.all()
-    serializer_class = TeacherSerializer

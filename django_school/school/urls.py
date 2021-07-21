@@ -2,32 +2,19 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path("student/", views.ListStudentAPIView.as_view(), name="student_list"),
+    path("course/", views.CreateCourseAPIView.as_view(), name="create_course"),
     path(
-        "student/create/", views.CreateStudentAPIView.as_view(), name="student_create"
+        "course/", views.ListActiveCoursesAPIView.as_view(), name="list_active_courses"
     ),
     path(
-        "student/update/<int:pk>/",
-        views.UpdateStudentAPIView.as_view(),
-        name="student_update",
+        "course/<int:pk>/",
+        views.DeleteCourseAPIView.as_view(),
+        name="delete_course",
     ),
     path(
-        "student/delete/<int:pk>/",
-        views.DeleteStudentAPIView.as_view(),
-        name="student_delete",
+        "student/<int:pk>/course",
+        views.GetActiveStudentCourses.as_view(),
+        name="get_student_courses",
     ),
-    path("teacher/", views.ListTeacherAPIView.as_view(), name="teacher_list"),
-    path(
-        "teacher/create/", views.CreateTeacherAPIView.as_view(), name="teacher_create"
-    ),
-    path(
-        "teacher/update/<int:pk>/",
-        views.UpdateTeacherAPIView.as_view(),
-        name="teacher_update",
-    ),
-    path(
-        "teacher/delete/<int:pk>/",
-        views.DeleteTeacherAPIView.as_view(),
-        name="teacher_delete",
-    ),
+    path("teacher/<int:pk>", views.GetTeacherAPIView.as_view(), name="get_teacher"),
 ]
